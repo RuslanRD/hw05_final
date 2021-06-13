@@ -26,6 +26,7 @@ class PostViewTests(TestCase):
             slug='wrong-group',
             description='В этой группе не должно быть постов',
         )
+
         cls.post = Post.objects.create(
             text='Тестовый пост',
             pub_date='1949-1-1',
@@ -151,15 +152,64 @@ class PostViewTests(TestCase):
     def test_img_on_pages(self):
         cache.clear()
         with open('media/posts/6u4pxh82dhc31.png', 'rb') as img:
-            self.authorized_client.post(
+            post = self.authorized_client.post(
                 reverse('new_post'),
                 data={
                     'author': self.user,
                     'text': self.post.text,
-                    'group': self.group.pk,
+                    'group': self.group.id,
                     'image': img,
-                }
+                },
+                follow=True
             )
+        self.assertEqual(post.status_code, 200)
+        self.assertEqual(Post.objects.count(), 2)
+
+        post = Post.objects.first()
+        urls = (
+            reverse('index'),
+            reverse('profile', kwargs={'username': post.author}),
+            reverse('group_posts', kwargs={'slug': self.group.slug}),
+            reverse(
+                'post',
+                kwargs={'username': post.author, 'post_id': post.pk}
+            )
+        )
+        for url in urls:
+            response = self.authorized_client.get(url)
+            self.assertContains(response, 'img')
+
+    def test_img_in_db(self):
+        cache.clear()
+        with open('media/posts/6u4pxh82dhc31.png', 'rb') as img:
+            post = self.authorized_client.post(
+                reverse('new_post'),
+                data={
+                    'author': self.user,
+                    'text': self.post.text,
+                    'group': self.group.id,
+                    'image': img,
+                },
+                follow=True
+            )
+        self.assertEqual(post.status_code, 200)
+        self.assertEqual(Post.objects.count(), 2)
+
+    def test_img_is_img(self):
+        cache.clear()
+        with open('media/posts/text_file.txt', 'rb') as img:
+            post = self.authorized_client.post(
+                reverse('new_post'),
+                data={
+                    'author': self.user,
+                    'text': self.post.text,
+                    'group': self.group.id,
+                    'image': img,
+                },
+                follow=True
+            )
+        self.assertEqual(post.status_code, 200)
+        self.assertEqual(Post.objects.count(), 1)
 
     def test_cache_index(self):
         response = self.authorized_client.get(reverse('index'))
