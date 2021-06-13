@@ -20,11 +20,8 @@ from django.contrib import admin
 from django.urls import include, path
 
 handler404 = "posts.views.page_not_found"  # noqa
-<<<<<<< HEAD
 handler500 = "posts.views.server_error"  # noqa
-=======
-handler500 = "posts.views.server_error"  # noqa 
->>>>>>> 3f1cb256004520fbc660a72edd70f208ea5b043a
+
 
 urlpatterns = [
     # импорт правил из приложения admin
