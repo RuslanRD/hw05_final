@@ -1,32 +1,21 @@
-<!doctype html>
-<html>
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        <title>Последние обновления | Yatube</title>
-    </head>
-    <body>
-        {% extends "base.html" %}
-        {% load static %} 
-        {% load cache %}
-        {% block title %}Последние обновления на сайте{% endblock %}
-        {% block header %}Последние обновления на сайте{% endblock %}
-        {% block content %}
+{% extends "base.html" %}
+{% load static %} 
+{% load cache %}
+{% block title %}Последние обновления на сайте{% endblock %}
+{% block header %}Последние обновления на сайте{% endblock %}
+{% block content %}
 
-        {% cache 20 index_page using key page %}
-            <div class="container">
-                {% include "includes/menu.html" with index=True %}
-                <!-- Вывод ленты записей -->
-                {% for post in page %}
-                <!-- Вот он, новый include! -->
-                {% include 'includes/post_item.html' with post=post %}
-                {% endfor %}
-            </div>
-        {% endcache %}
-            <!-- Вывод паджинатора -->
-            {% include 'includes/paginator.html' with items=page paginator=paginator%}
+    {% cache 20 index_page using key page %}
+        <div class="container">
+            {% include "includes/menu.html" with index=True %}
+            <!-- Вывод ленты записей -->
+            {% for post in page %}
+            <!-- Вот он, новый include! -->
+            {% include 'includes/post_item.html' with post=post %}
+            {% endfor %}
+        </div>
+    {% endcache %}
+    <!-- Вывод паджинатора -->
+    {% include 'includes/paginator.html' with items=page paginator=paginator%}
 
-        {% endblock %}
-
-    </body>
-</html> 
+{% endblock %}

@@ -30,7 +30,7 @@ class GroupURLTests(TestCase):
         self.user = User.objects.create_user(username='StasBasov')
         self.authorized_client = Client()
         self.authorized_client.force_login(self.user)
-        self.user_1 = User.objects.create_user(username="TestUser")
+        self.user_1 = User.objects.create_user(username='TestUser')
         self.authorized_client_1 = Client()
         self.authorized_client_1.force_login(self.user_1)
         self.post = Post.objects.create(

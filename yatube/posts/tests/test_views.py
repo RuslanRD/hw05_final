@@ -260,7 +260,7 @@ class TestCommentsFollow(TestCase):
             post=self.post,
         )
 
-    def test_follow_unfollow(self):
+    def test_follow(self):
         before = Follow.objects.all().count()
         self.client_auth_follower.get(
             reverse(
@@ -272,6 +272,9 @@ class TestCommentsFollow(TestCase):
         )
         after = Follow.objects.all().count()
         self.assertEqual(before + 1, after)
+
+    def test_unfollow(self):
+        before = Follow.objects.all().count()
         self.client_auth_follower.get(
             reverse(
                 'profile_unfollow',

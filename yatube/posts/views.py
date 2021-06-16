@@ -11,7 +11,7 @@ User = get_user_model()
 
 
 def index(request):
-    post_list = Post.objects.all()
+    post_list = Post.objects.select_related('group').all()
     paginator = Paginator(post_list, settings.PAGES)
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
@@ -131,9 +131,7 @@ def add_comment(request, username, post_id):
 
 @login_required
 def follow_index(request):
-    user_follows = User.objects.get(
-        pk=request.user.id).follower.all().values_list('author')
-    post_list = Post.objects.filter(author__in=user_follows)
+    post_list = Post.objects.filter(author__following__user=request.user)
     paginator = Paginator(post_list, settings.PAGES)
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
